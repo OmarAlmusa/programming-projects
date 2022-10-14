@@ -1,0 +1,11 @@
+mnist_network = {Convolution([1, 28, 28], [7, 7], 8, 'HE');
+                 ReLU();
+                 MaxPooling([8, 22, 22], [2, 2], 2);
+                 Convolution([8, 7, 7], [3, 3], 16, 'HE');
+                 ReLU();
+                 MaxPooling([16, 5, 5], [2, 2], 1);
+                 Reshape([16, 2, 2], [16*2*2, 1]);
+                 Dense(16*2*2, 32, 'HE');
+                 ReLU();
+                 Dense(32, 10, 'NX');
+                 Softmax()};
