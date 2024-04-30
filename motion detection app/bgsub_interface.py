@@ -11,6 +11,7 @@ class Video_interface(customtkinter.CTkToplevel):
 
         self.frame_size = frame_size
         self.video = video_path
+        self.tn = 10
         self.detections = background_subtraction.Detect(self.video, self.frame_size)
 
         self.button1 = customtkinter.CTkButton(self, text="start video", font=('Consolas', 16), command=self.start_video)
@@ -25,7 +26,7 @@ class Video_interface(customtkinter.CTkToplevel):
         self.label_widget3 = customtkinter.CTkLabel(self, text="Detections", compound='top')
         self.label_widget3.grid(row=2, column=0, padx=10, pady=10, columnspan=2, sticky='nsew')
 
-        self.exit_button = customtkinter.CTkButton(self, text='Exit', font=('Consolas', 16), command=self.close)
+        self.exit_button = customtkinter.CTkButton(self, text='Close', font=('Consolas', 16), command=self.close)
         self.exit_button.grid(row=3, column=0, padx=10, pady=10, columnspan=2, sticky='s')
 
     def close(self):
@@ -52,9 +53,9 @@ class Video_interface(customtkinter.CTkToplevel):
             self.label_widget3.configure(image=tk_image3)
 
             
-            self.label_widget1.after(10, self.start_video)
+            self.label_widget1.after(self.tn, self.start_video)
 
         else:
             self.detections = background_subtraction.Detect(self.video, self.frame_size)
 
-            self.label_widget1.after(10, self.start_video)
+            self.label_widget1.after(self.tn, self.start_video)
