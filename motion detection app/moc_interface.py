@@ -3,19 +3,27 @@ import customtkinter
 from PIL import Image
 
 class Video_interface(customtkinter.CTkToplevel):
-    def __init__(self, master, video_path, frame_size):
-        super().__init__(master)
+    def __init__(self, frame_size):
+        super().__init__()
+
+        self.title("Moving Object Classifier Interface")
+        self.geometry("600x400")
 
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0, 1, 2), weight=1)
 
         self.frame_size = frame_size
-        self.video = video_path
-        self.tn = 5
-        self.detections = moving_object_classifier.Detect(self.video, self.frame_size)
+        self.video = None
+        self.tn = 10
+        self.detections = None
+        self.VIDEO_OPEN = False
+        self.REAL_TIME_OPEN = False
 
-        self.button1 = customtkinter.CTkButton(self, text="start video", font=('Consolas', 16), command=self.start_video)
-        self.button1.grid(row=0, column=0, padx=10, pady=10, columnspan=2, sticky='n')
+        self.button1 = customtkinter.CTkButton(self, text="Open Video", font=('Consolas', 16), command=self.open_video)
+        self.button1.grid(row=0, column=0, padx=10, pady=10, sticky='n')
+
+        self.button2 = customtkinter.CTkButton(self, text="Real Time", font=('Consolas', 16), command=self.real_time)
+        self.button2.grid(row=0, column=1, padx=10, pady=10, sticky='n')
 
         self.label_widget1 = customtkinter.CTkLabel(self, text="Original", compound='top')
         self.label_widget1.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
@@ -32,6 +40,23 @@ class Video_interface(customtkinter.CTkToplevel):
     def close(self):
         self.destroy()
         self.update()
+
+
+    def open_video(self):
+        if self.REAL_TIME_OPEN == False:
+            self.VIDEO_OPEN = True
+            self.video = customtkinter.filedialog.askopenfilename(initialdir='./', title="Select Files",
+                                                                filetypes=[('Video', ['*.mp4','*.avi','*.mov','*.mkv','*gif']),('All Files', '*.*')])
+            if self.video != '':
+                self.detections = moving_object_classifier.Detect(self.video, self.frame_size)
+                self.start_video()
+
+    def real_time(self):
+        if self.VIDEO_OPEN == False:
+            self.REAL_TIME_OPEN = True
+            self.video = 0
+            self.detections = moving_object_classifier.Detect(self.video, self.frame_size)
+            self.start_video()
 
 
     def start_video(self):
